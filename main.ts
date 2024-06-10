@@ -1,5 +1,10 @@
 controller.anyButton.onEvent(ControllerButtonEvent.Pressed, function () {
-    mySprite.vy = -100
+    if (mySprite.y >= 80) {
+        mySprite.vy = -120
+    }
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
+    game.gameOver(false)
 })
 let projectile: Sprite = null
 let mySprite: Sprite = null
@@ -23,7 +28,14 @@ mySprite = sprites.create(img`
     . . . . 1 1 1 . . 1 1 . . . . . 
     `, SpriteKind.Player)
 mySprite.setPosition(10, 80)
-mySprite.ay = 30
+game.onUpdate(function () {
+    if (mySprite.y < 80) {
+        mySprite.ay = 102
+    } else {
+        mySprite.ay = 0
+        mySprite.vy = 0
+    }
+})
 game.onUpdateInterval(5000, function () {
     projectile = sprites.createProjectileFromSide(img`
         ........................
@@ -52,4 +64,5 @@ game.onUpdateInterval(5000, function () {
         ......ee6eeeeee6eef.....
         `, -100, 0)
     projectile.y = 80
+    info.changeScoreBy(32)
 })
